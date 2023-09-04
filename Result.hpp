@@ -16,8 +16,8 @@ namespace result {
     E           err() const;
 
   public:
-    static Result<V,E> Err(E, V = {});
-    static Result<V,E> Ok(V, E = {});
+    static Result<V,E> Err(E);
+    static Result<V,E> Ok(V);
 
   private:
     Type type;
@@ -26,12 +26,12 @@ namespace result {
   };
 
   template <typename V, typename E>
-  Result<V,E> Result<V,E>::Err(E err, V val) {
+  Result<V,E> Result<V,E>::Err(E err) {
     return Result<V,E>(err);
   }
 
   template <typename V, typename E>
-  Result<V,E> Result<V,E>::Ok(V ok, E err) {
+  Result<V,E> Result<V,E>::Ok(V ok) {
     return Result<V,E>(ok);
   }
 
