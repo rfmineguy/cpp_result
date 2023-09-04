@@ -5,11 +5,16 @@ namespace result {
 
   template <typename V, typename E>
   class Result {
-  public:
+  protected:
     Result(V val) :type(E_Ok), val(val) {}
     Result(E err) :type(E_Err), err(err) {}
+  public:
     void if_err(std::function<void(E)>);
     void if_ok(std::function<void(V)>);
+
+  public:
+    static Result Err(E, V = {});
+    static Result Ok(V, E = {});
 
   private:
     Type type;
@@ -18,12 +23,12 @@ namespace result {
   };
 
   template <typename V, typename E>
-  Result<V,E> Err(E err, V val = {}) {
+  Result<V,E> Result<V,E>::Err(E err, V val) {
     return Result<V,E>(err);
   }
 
   template <typename V, typename E>
-  Result<V,E> Ok(V ok, E err = {}) {
+  Result<V,E> Result<V,E>::Ok(V ok, E err) {
     return Result<V,E>(ok);
   }
 

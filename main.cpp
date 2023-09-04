@@ -4,8 +4,8 @@
 
 result::Result<int,const char*> toHex(const std::string& input) {
   bool state = std::all_of(input.begin(), input.end(), ::isxdigit);
-  return state ? result::Ok<int, const char*>(std::stoi(input, nullptr, 16))
-               : result::Err<int, const char*>("Failed to convert input to hex");
+  return state ? result::Result<int, const char*>::Ok(std::stoi(input, nullptr, 16))
+               : result::Result<int, const char*>::Err("Failed to convert input to hex");
 }
 
 int main() {
