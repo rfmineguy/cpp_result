@@ -11,7 +11,8 @@ namespace result {
   public:
     Result<V,E> if_err(std::function<void(E)>) const;
     Result<V,E> if_ok(std::function<void(V)>) const;
-    bool        as_bool() const;
+    bool        is_err() const;
+    bool        is_ok() const;
     V           val() const;
     E           err() const;
 
@@ -52,7 +53,12 @@ namespace result {
   }
 
   template <typename V, typename E>
-  bool Result<V,E>::as_bool() const {
+  bool Result<V,E>::is_err() const {
+    return type == E_Err;
+  }
+
+  template <typename V, typename E>
+  bool Result<V,E>::is_ok() const {
     return type == E_Ok;
   }
 
