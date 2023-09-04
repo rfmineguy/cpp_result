@@ -6,20 +6,23 @@ namespace result {
   template <typename V, typename E>
   class Result {
   protected:
-    Result(V val) :type(E_Ok), val(val) {}
-    Result(E err) :type(E_Err), err(err) {}
+    Result(V val) :type(E_Ok), v(std::move(val)) {}
+    Result(E err) :type(E_Err), e(std::move(err)) {}
   public:
-    void if_err(std::function<void(E)>);
-    void if_ok(std::function<void(V)>);
+    Result<V,E> if_err(std::function<void(E)>) const;
+    Result<V,E> if_ok(std::function<void(V)>) const;
+    bool        as_bool() const;
+    V           val() const;
+    E           err() const;
 
   public:
-    static Result Err(E, V = {});
-    static Result Ok(V, E = {});
+    static Result<V,E> Err(E, V = {});
+    static Result<V,E> Ok(V, E = {});
 
   private:
     Type type;
-    V val;
-    E err;
+    V v;
+    E e;
   };
 
   template <typename V, typename E>
@@ -33,16 +36,33 @@ namespace result {
   }
 
   template <typename V, typename E>
-  void Result<V,E>::if_err(std::function<void(E)> func) {
+  Result<V,E> Result<V,E>::if_err(std::function<void(E)> func) const {
     if (type == E_Err) {
-      func(err);
+      func(e);
     }
+    return *this;
   }
 
   template <typename V, typename E>
-  void Result<V,E>::if_ok(std::function<void(V)> func) {
+  Result<V,E> Result<V,E>::if_ok(std::function<void(V)> func) const {
     if (type == E_Ok) {
-      func(val);
+      func(v);
     }
+    return *this;
+  }
+
+  template <typename V, typename E>
+  bool Result<V,E>::as_bool() const {
+    return type == E_Ok;
+  }
+
+  template <typename V, typename E>
+  V Result<V,E>::val() const {
+    return v;
+  }
+
+  template <typename V, typename E>
+  E Result<V,E>::err() const {
+    return e;
   }
 }
